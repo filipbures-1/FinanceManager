@@ -26,9 +26,7 @@ public class Transaction {
     public String getDate() {
         return date;
     }
-
-
-
+    
     public static Transaction fromString(String line) {
         String[] parts = line.split(",");
         return new Transaction(Double.parseDouble(parts[0]), parts[1], parts[2], parts[3]);
