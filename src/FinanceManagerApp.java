@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 public class FinanceManagerApp extends JFrame {
     private FinanceManager manager = new FinanceManager();
@@ -18,6 +19,10 @@ public class FinanceManagerApp extends JFrame {
         balanceLabel = new JLabel("Aktuální zůstatek: " + manager.getBalance());
         topPanel.add(balanceLabel);
 
+        JButton addButton = new JButton("Přidat transakci");
+        addButton.addActionListener(e -> AddTransactionFunction());
+        topPanel.add(addButton);
+
         add(topPanel, BorderLayout.NORTH);
 
         String[] columns = {"Částka", "Typ", "Kategorie", "Datum"};
@@ -31,6 +36,19 @@ public class FinanceManagerApp extends JFrame {
 
     private void updateBalance() {
         balanceLabel.setText("Aktuální zůstatek: " + manager.getBalance());
+    }
+    private void AddTransactionFunction() {
+        new AddTransaction(this, manager).setVisible(true);
+        updateBalance();
+        refreshTable();
+    }
+
+    private void refreshTable() {
+        tableModel.setRowCount(0);
+        List<Transaction> transactions = manager.getTransactions();
+        for (Transaction t : transactions) {
+            tableModel.addRow(new Object[]{t.getAmount(), t.getType(), t.getCategory(), t.getDate()});
+        }
     }
 
 }
