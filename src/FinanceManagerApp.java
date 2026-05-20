@@ -10,6 +10,7 @@ public class FinanceManagerApp extends JFrame {
     private JLabel balanceLabel;
 
     public FinanceManagerApp() {
+        manager.loadFromFile();
         setTitle("Finanční Manažer");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

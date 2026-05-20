@@ -1,8 +1,11 @@
+import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 class FinanceManager {
     private List<Transaction> transactions = new ArrayList<>();
+    private String fileName = "transactions.csv";
 
     public void addTransaction(Transaction t) {
         transactions.add(t);
@@ -23,5 +26,25 @@ class FinanceManager {
         }
         return balance;
     }
+    public void loadFromFile() {
+        transactions.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                transactions.add(Transaction.fromString(line));
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Chyba při načítání souboru.");
+        }
+    }
 
+    public void saveToFile() {
+        try (FileWriter fw = new FileWriter(fileName)) {
+            for (Transaction t : transactions) {
+                fw.write(t.toString() + "\n") ;
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Chyba při ukládání souboru.");
+        }
+    }
 }

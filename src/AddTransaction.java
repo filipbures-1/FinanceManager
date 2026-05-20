@@ -40,6 +40,7 @@ class AddTransaction extends JDialog {
                 String category = (String) categoryCombo.getSelectedItem();
                 String date = dateField.getText();
                 manager.addTransaction(new Transaction(amount, type, category, date));
+                manager.saveToFile();
                 setVisible(false);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Neplatná částka.");

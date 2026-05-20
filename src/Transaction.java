@@ -27,6 +27,11 @@ public class Transaction {
         return date;
     }
     
+    @Override
+    public String toString() {
+        return amount + "," + type + "," + category + "," + date;
+    }
+    
     public static Transaction fromString(String line) {
         String[] parts = line.split(",");
         return new Transaction(Double.parseDouble(parts[0]), parts[1], parts[2], parts[3]);
