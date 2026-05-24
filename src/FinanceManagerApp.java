@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FinanceManagerApp extends JFrame {
@@ -8,6 +9,7 @@ public class FinanceManagerApp extends JFrame {
     private DefaultTableModel tableModel;
     private JTable table;
     private JLabel balanceLabel;
+    private JComboBox<String> categoryFilter;
 
     public FinanceManagerApp() {
         manager.loadFromFile();
@@ -32,6 +34,15 @@ public class FinanceManagerApp extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.add(new JLabel("Filtrovat podle kategorie:"));
+        categoryFilter = new JComboBox<>(getCategories());
+        categoryFilter.addActionListener(e -> refreshTable());
+        bottomPanel.add(categoryFilter);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        refreshTable();
     }
 
 
@@ -46,10 +57,28 @@ public class FinanceManagerApp extends JFrame {
 
     private void refreshTable() {
         tableModel.setRowCount(0);
-        List<Transaction> transactions = manager.getTransactions();
-        for (Transaction t : transactions) {
+        List<Transaction> filtered = manager.filterByCategory((String) categoryFilter.getSelectedItem());
+        for (Transaction t : filtered) {
             tableModel.addRow(new Object[]{t.getAmount(), t.getType(), t.getCategory(), t.getDate()});
         }
     }
+    private String[] getCategories() {
+        List<String> cats = new ArrayList<>();
+        cats.add("Vše");
 
+        String[] incomeCategories = {"Plat", "Bonus", "Investice", "Jiné"};
+        String[] expenseCategories = {"Jídlo", "Doprava", "Bydlení", "Zábava", "Nákupy", "Jiné"};
+
+        for (String c : incomeCategories) {
+            if (!cats.contains(c)) {
+                cats.add(c);
+            }
+        }
+        for (String c : expenseCategories) {
+            if (!cats.contains(c)) {
+                cats.add(c);
+            }
+        }
+        return cats.toArray(new String[0]);
+    }
 }

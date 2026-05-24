@@ -47,4 +47,16 @@ class FinanceManager {
             JOptionPane.showMessageDialog(null, "Chyba při ukládání souboru.");
         }
     }
+    public List<Transaction> filterByCategory(String category) {
+        if (category == null || "Vše".equals(category)) {
+            return transactions;
+        }
+        List<Transaction> filtered = new ArrayList<>();
+        for (Transaction t : transactions) {
+            if (category.equals(t.getCategory())) {
+                filtered.add(t);
+            }
+        }
+        return filtered;
+    }
 }
