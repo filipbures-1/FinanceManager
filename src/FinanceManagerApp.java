@@ -40,6 +40,10 @@ public class FinanceManagerApp extends JFrame {
         categoryFilter.addActionListener(e -> refreshTable());
         bottomPanel.add(categoryFilter);
 
+        JButton statsButton = new JButton("Statistiky");
+        statsButton.addActionListener(e -> openStatisticsWindow());
+        topPanel.add(statsButton);
+
         add(bottomPanel, BorderLayout.SOUTH);
 
         refreshTable();
@@ -80,5 +84,9 @@ public class FinanceManagerApp extends JFrame {
             }
         }
         return cats.toArray(new String[0]);
+    }
+
+    private void openStatisticsWindow() {
+        new StatisticsWindow(manager.getTransactions()).setVisible(true);
     }
 }
