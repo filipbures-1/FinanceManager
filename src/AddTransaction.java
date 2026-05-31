@@ -5,30 +5,36 @@ class AddTransaction extends JDialog {
     private JTextField amountField, dateField;
     private JComboBox<String> typeCombo, categoryCombo;
     private FinanceManager manager;
-    private String[] incomeCategories = {"Plat", "Bonus", "Investice", "Jiné"};
-    private String[] expenseCategories = {"Jídlo", "Doprava", "Bydlení", "Zábava", "Nákupy", "Jiné"};
+    private String[] incomeCategories = {"Salary", "Bonus", "Investment", "Other"};
+    private String[] expenseCategories = {"Food", "Transportation", "Housing", "Entertainment", "Shopping", "Other"};
 
+    /**
+     * Function to add a transaction
+     *
+     * @param parent Main application window this function is attached to
+     * @param manager Instance of FinanceManager to manage existing transactions
+     */
     public AddTransaction(JFrame parent, FinanceManager manager) {
-        super(parent, "Přidat transakci", true);
+        super(parent, "Add Transaction", true);
         this.manager = manager;
         setSize(300, 200);
         setLayout(new GridLayout(5, 2));
 
-        add(new JLabel("Částka:"));
+        add(new JLabel("Amount:"));
         amountField = new JTextField();
         add(amountField);
 
-        add(new JLabel("Typ:"));
-        typeCombo = new JComboBox<>(new String[]{"Příjem", "Výdaj"});
+        add(new JLabel("Type:"));
+        typeCombo = new JComboBox<>(new String[]{"Income", "Expense"});
         typeCombo.addActionListener(e -> updateCategoryCombo());
         add(typeCombo);
 
-        add(new JLabel("Kategorie:"));
+        add(new JLabel("Category:"));
         categoryCombo = new JComboBox<>();
         updateCategoryCombo();
         add(categoryCombo);
 
-        add(new JLabel("Datum (DD-MM-YYYY):"));
+        add(new JLabel("Date (DD-MM-YYYY):"));
         dateField = new JTextField();
         add(dateField);
 
@@ -43,21 +49,27 @@ class AddTransaction extends JDialog {
                 manager.saveToFile();
                 setVisible(false);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Neplatná částka.");
+                JOptionPane.showMessageDialog(this, "Invalid amount.");
             }
         });
         add(okButton);
 
-        JButton cancelButton = new JButton("Zrušit");
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> setVisible(false));
         add(cancelButton);
     }
+
+    /**
+     * Updates categories based on the selected type
+     * Income = income categories
+     * Expense = expense categories
+     */
 
     private void updateCategoryCombo() {
         String selectedType = (String) typeCombo.getSelectedItem();
         categoryCombo.removeAllItems();
         String[] categories;
-        if ("Příjem".equals(selectedType)) {
+        if ("Income".equals(selectedType)) {
             categories = incomeCategories;
         } else {
             categories = expenseCategories;

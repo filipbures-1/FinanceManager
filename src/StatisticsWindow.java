@@ -4,13 +4,18 @@ import java.awt.*;
 import java.util.List;
 
 class StatisticsWindow extends JFrame {
+    /**
+     * Creates a statistics window and calculates all financial summaries
+     *
+     * @param transactions list of all transactions to be analyzed
+     */
     public StatisticsWindow(List<Transaction> transactions) {
-        setTitle("Statistiky podle druhu a typu");
+        setTitle("Statistics");
         setSize(500, 350);
         setLayout(new BorderLayout());
 
-        String[] incomeCategories = {"Plat", "Bonus", "Investice", "Jiné"};
-        String[] expenseCategories = {"Jídlo", "Doprava", "Bydlení", "Zábava", "Nákupy", "Jiné"};
+        String[] incomeCategories = {"Salary", "Bonus", "Investment", "Other"};
+        String[] expenseCategories = {"Food", "Transportation", "Housing", "Entertainment", "Shopping", "Other"};
 
         double[] incomeSums = new double[incomeCategories.length];
         double[] expenseSums = new double[expenseCategories.length];
@@ -21,7 +26,7 @@ class StatisticsWindow extends JFrame {
             String type = t.getType();
             String category = t.getCategory();
             double amount = t.getAmount();
-            if ("Příjem".equals(type)) {
+            if ("Income".equals(type)) {
                 for (int i = 0; i < incomeCategories.length; i++) {
                     if (incomeCategories[i].equals(category)) {
                         incomeSums[i] += amount;
@@ -29,7 +34,7 @@ class StatisticsWindow extends JFrame {
                     }
                 }
                 incomeSum += amount;
-            } else if ("Výdaj".equals(type)) {
+            } else if ("Expense".equals(type)) {
                 for (int i = 0; i < expenseCategories.length; i++) {
                     if (expenseCategories[i].equals(category)) {
                         expenseSums[i] += amount;
@@ -40,27 +45,29 @@ class StatisticsWindow extends JFrame {
             }
         }
 
-        String[] columns = {"Typ", "Druh", "Celková suma"};
+        String[] columns = {"Type", "Category", "Amount"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 
         for (int i = 0; i < incomeCategories.length; i++) {
-            model.addRow(new Object[]{"Příjem", incomeCategories[i], incomeSums[i]});
+            model.addRow(new Object[]{"Income", incomeCategories[i], incomeSums[i]});
         }
 
         model.addRow(new Object[]{"---", "---", "---"});
 
         for (int i = 0; i < expenseCategories.length; i++) {
-            model.addRow(new Object[]{"Výdaj", expenseCategories[i], expenseSums[i]});
+            model.addRow(new Object[]{"Expense", expenseCategories[i], expenseSums[i]});
         }
 
-        model.addRow(new Object[]{"---", "Součet příjmů:", incomeSum});
-        model.addRow(new Object[]{"---", "Součet výdajů:", expenseSum});
-        model.addRow(new Object[]{"---", "Čistý zůstatek:", incomeSum - expenseSum});
+        model.addRow(new Object[]{"---", "---", "---"});
+
+        model.addRow(new Object[]{"---", "Total Income:", incomeSum});
+        model.addRow(new Object[]{"---", "Total Expenses:", expenseSum});
+        model.addRow(new Object[]{"---", "Balance:", incomeSum - expenseSum});
 
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JButton closeButton = new JButton("Zavřít");
+        JButton closeButton = new JButton("Cancel");
         closeButton.addActionListener(e -> setVisible(false));
         add(closeButton, BorderLayout.SOUTH);
     }
